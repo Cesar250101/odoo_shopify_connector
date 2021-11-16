@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sp_odoo_backend_tree" model="ir.ui.view">
+			<field name="name">shopify.configure.tree</field>
+			<field name="model">shopify.configure</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="8" />
+			<field name="arch" type="xml">
+				<tree string="Backend">
+					<field name="name" />
+					<field name="connectivity"/>
+					<field name="date_creation" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_sp_odoo_backend_form" model="ir.ui.view">
+			<field name="name">shopify.configure.form</field>
+			<field name="model">shopify.configure</field>
+			<field name="type">form</field>
+			<field name="priority" eval="8" />
+			<field name="arch" type="xml">
+				<form string="Backend">
+					<header>
+						<button string="Check Connection" class="oe_highlight"
+							type="object" name="test_connection" />
+					</header>
+					<sheet>
+						<separator string="Instance Name" colspan="4" />
+						<h1>
+							<field name="name" required="1" />
+						</h1>
+						<separator string="Authentication" colspan="4" />
+						<group col="2">
+						<group col="2">
+							<field name="location" required="1" />
+						</group>
+
+						<group>
+							<field name="consumer_key" required="1" password="True"/>
+						</group>
+
+						<group>
+							<field name="version" required="1" />
+						</group>
+						<group>
+							<field name="consumer_secret" required="1" password="True"/>
+						</group>
+						<group>
+							<field name="verify_ssl" />
+						</group>
+						</group>
+<!--						<separator string="Other Configuration" colspan="4" />-->
+
+<!--						<group col="2">-->
+
+<!--							<group col="2">-->
+<!--							<field name="warehouse"/>-->
+<!--							<div class="text-muted">-->
+<!--                                Select a Warehouse-->
+<!--                            </div>-->
+<!--							</group>-->
+
+<!--							<group>-->
+<!--							<field name="pricelist"/>-->
+<!--							</group>-->
+<!--						</group>-->
+
+						<notebook colspan="4">
+							<page string="Product">
+								<group col="2">
+									<group>
+									<button class="btn btn-success" name="import_product" string="
+									Import Product" type="object"/>
+									</group>
+									<group>
+									<button class="btn btn-warning" name="export_products" string="
+									Export Product" type="object"/>
+									</group>
+<!--									<group>-->
+<!--									<button class="btn btn-warning" name="fun_blank" string="-->
+<!--									Export Tags" type="object"/>-->
+<!--									</group>-->
+									<group>
+									</group>
+								</group>
+							</page>
+							<page string="Customer">
+								<group col="3">
+									<button class="btn btn-success" name="import_customer" string="
+									Import Customers" type="object"/>
+
+									<button class="btn btn-warning" name="export_customers" string="
+									Export Customers" type="object"/>
+								</group>
+							</page>
+							<page string="Order">
+								<group col="3">
+									<button class="btn btn-success" string="Import Orders" name="import_sale_order" type="object"/>
+									<button class="btn btn-warning" string="Export Orders" name="export_so" type="object"/>
+								</group>
+							</page>
+						</notebook>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record model="ir.actions.act_window" id="sp_odoo_site_action">
+			<field name="name">Shopify Connection</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">shopify.configure</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{}</field>
+		</record>
+
+        <record model="ir.actions.act_window.view" id="sp_odoo_site_action_form">
+			<field name="act_window_id" ref="sp_odoo_site_action" />
+			<field name="sequence" eval="20" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_sp_odoo_backend_form" />
+		</record>
+
+        <record model="ir.actions.act_window.view" id="sp_odoo_site_action_tree">
+			<field name="act_window_id" ref="sp_odoo_site_action" />
+			<field name="sequence" eval="10" />
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="view_sp_odoo_backend_tree" />
+		</record>
+
+        <menuitem id="menu_point_root" name="SP ODOO Bridge"  />
+		<menuitem  id="menu_sp_odoo_id" name="Dashboard" parent="menu_point_root" sequence="1" action="sp_odoo_site_action"/>
+
+        <!-- this below menuitem taken from job.xml  -->
+		<menuitem groups="group_sp_odoo,group_sp_odoo_user" id="menu_point_root" name="Odoo Shopify Connector"/>
+
+
+
+			
+	</data>
+</odoo>
+		

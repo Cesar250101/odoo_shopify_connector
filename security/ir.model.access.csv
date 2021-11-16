@@ -1,0 +1,36 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+user_shopify_configure,SP Configure user,model_shopify_configure,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_product_template,SP Product Template user,model_shopify_odoo_product_template,group_sp_odoo_user,1,0,0,0
+user_product_product,SP ProductProduct user,model_product_product,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_product_product,SP ProductProduct Mapping user,model_shopify_odoo_product_product,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_res_partner,shopify.odoo.res.partner,model_shopify_odoo_res_partner,group_sp_odoo_user,1,0,0,0
+user_sale_order,SP Sales Order user,model_sale_order,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_sale_order,SP Sales Order Mapping user,model_shopify_odoo_sale_order,group_sp_odoo_user,1,0,0,0
+user_product_attribute,SP Product Attribute user,model_product_attribute,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_attribute,SP Product Attribute Mapping user,model_shopify_odoo_attribute,group_sp_odoo_user,1,0,0,0
+user_product_attribute_value,SP Product Attribute Value user,model_product_attribute_value,group_sp_odoo_user,1,0,0,0
+user_shopify_odoo_attribute_value,SP Product Attribute Value Mapping user,model_shopify_odoo_attribute_value,group_sp_odoo_user,1,0,0,0
+user_shopify_sale_order_line,SP Sales Order Mapping user,model_shopify_sale_order_line,group_sp_odoo_user,1,0,0,0
+
+manager_shopify_configure,SP Configure manager,model_shopify_configure,group_sp_odoo,1,1,1,1
+access_message_wizard,message.wizard,model_message_wizard,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_product_template,SP Product Template manager,model_shopify_odoo_product_template,group_sp_odoo,1,1,1,1
+manager_product_product,SP ProductProduct manager,model_product_product,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_product_product,SP ProductProduct Mapping manager,model_shopify_odoo_product_product,group_sp_odoo,1,1,1,1
+manager_res_partner,SP Customer manager,model_res_partner,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_res_partner,SP Customer Mapping manager,model_shopify_odoo_res_partner,group_sp_odoo,1,1,1,1
+manager_sale_order,SP Sales Order manager,model_sale_order,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_sale_order,SP Sales Order Mapping manager,model_shopify_odoo_sale_order,group_sp_odoo,1,1,1,1
+manager_product_attribute,SP Product Attribute manager,model_product_attribute,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_attribute,SP Product Attribute Mapping manager,model_shopify_odoo_attribute,group_sp_odoo,1,1,1,1
+manager_product_attribute_value,SP Product Attribute Value manager,model_product_attribute_value,group_sp_odoo,1,1,1,1
+manager_shopify_odoo_attribute_value,SP Product Attribute Value Mapping manager,model_shopify_odoo_attribute_value,group_sp_odoo,1,1,1,1
+manager_shopify_sale_order_line,SP Sales Order Mapping manager,model_shopify_sale_order_line,group_sp_odoo,1,1,1,1
+
+access_product_tags,product.tags,model_product_tags,group_sp_odoo_user,1,0,0,0
+access_product_tags_manager,product.tags.manager,model_product_tags,group_sp_odoo,1,1,1,1
+access_shopify_odoo_sale_order,access_shopify_odoo_sale_order,model_shopify_odoo_sale_order,base.group_user,1,1,1,1
+access_product_attribute,access_product_attribute,model_product_attribute,base.group_user,1,1,1,1
+access_shopify_odoo_attribute,access_shopify_odoo_attribute,model_shopify_odoo_attribute,base.group_user,1,1,1,1
+access_product_attribute_value,access_product_attribute_value,model_product_attribute_value,base.group_user,1,1,1,1
+access_shopify_odoo_attribute_value,access_shopify_odoo_attribute_value,model_shopify_odoo_attribute_value,base.group_user,1,1,1,1

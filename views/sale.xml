@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="backend_wizard_view" model="ir.ui.view">
+            <field name="name">sync.multiple.wizard.form</field>
+            <field name="model">sync.multiple</field>
+            <field name="arch" type="xml">
+                <form string="Select Backend">
+                    <group col="2">
+                        <field name="select_backend"/>
+                    </group>
+                    <footer>
+                        <button name="get_backend" string="Ok" class="btn-primary" type="object"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_backend_wizard" model="ir.actions.act_window">
+            <field name="name">Sync Product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sync.multiple</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="backend_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+    	<record model="ir.ui.view" id="wp_sale_order_view">
+            <field name="name">sale.order.sp.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='state']" position="before">
+<!--                    <button name="sync_sale_order" string="Sync" type="object" class="oe_highlight"/>-->
+                    <field name="length_backend" invisible="1"/>
+                    <button name="%(action_backend_wizard)d" type="action" string="Sync" class="oe_highlight" attrs="{'invisible':[('length_backend','=',False)]}"/>
+                    <button name="sync_sale_order" string="Sync" type="object" class="oe_highlight" attrs="{'invisible':[('length_backend','=',True)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="backend_id" widget="many2many_tags" required="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='other_information']" position="before">
+                    <page string="Shopify Info" name="Shopify Info">
+
+                        <group name="Shopify" string="Shopify">
+                            <field name="shopify_payment_status"/>
+                            <field name="shopify_sale_order_number"/>
+                            <field name="shopify_payment_method"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

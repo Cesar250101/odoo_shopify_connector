@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="backend_wizard_view" model="ir.ui.view">
+            <field name="name">sync.multiple.wizard.form</field>
+            <field name="model">sync.multiple</field>
+            <field name="arch" type="xml">
+                <form string="Select Backend">
+                    <group col="2">
+                        <field name="select_backend"/>
+                    </group>
+                    <footer>
+                        <button name="get_backend" string="Ok" class="btn-primary" type="object"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_backend_wizard" model="ir.actions.act_window">
+            <field name="name">Sync Product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sync.multiple</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="backend_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="sp_odoo_product_template_form_view" model="ir.ui.view">
+            <field name="name">product.normal.shopi.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <header position="inside">
+<!--                     <button name="sync_product" string="Sync" type="object" class="oe_highlight"/>-->
+                    <field name="length_backend" invisible="1"/>
+                    <button name="%(action_backend_wizard)d" type="action" string="Sync" class="oe_highlight" attrs="{'invisible':[('length_backend','=',False)]}"/>
+                    <button name="sync_product" string="Sync" type="object" class="oe_highlight" attrs="{'invisible':[('length_backend','=',True)]}"/>
+                </header>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="backend_id" widget="many2many_tags" required="1"/>
+                    <field name='tag_ids' widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//field[@name='taxes_id']" position="before">
+                    <field name="compare_at_price"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
