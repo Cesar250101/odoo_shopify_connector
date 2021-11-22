@@ -131,23 +131,23 @@ class SaleOrder(models.Model):
                 [('backend_id', '=', backend.id), ('shopify_id', '=', res['data']['orders'][0]['customer']['id'])])
         except:
             partner_id = False
-
-        if mapper and (res['status'] == 200 or res['status'] == 201):
-            vals = {
-                'shopify_id': res['data']['orders'][0]['id'],
-                'backend_id': backend.id,
-                'order_id': mapper.order_id.id,
-            }
-            self.backend_mapping.write(vals)
-        else:
-            if (partner_id):
+        if res['data']['orders']:
+            if mapper and (res['status'] == 200 or res['status'] == 201):
                 vals = {
                     'shopify_id': res['data']['orders'][0]['id'],
                     'backend_id': backend.id,
-                    'order_id': sale_order_template.id,
+                    'order_id': mapper.order_id.id,
                 }
+                self.backend_mapping.write(vals)
+            else:
+                if (partner_id):
+                    vals = {
+                        'shopify_id': res['data']['orders'][0]['id'],
+                        'backend_id': backend.id,
+                        'order_id': sale_order_template.id,
+                    }
 
-                self.backend_mapping.create(vals)
+                    self.backend_mapping.create(vals)
 
     def export(self, backend):
         """ export and create or update backend mapper """

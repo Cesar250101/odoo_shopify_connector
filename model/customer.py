@@ -118,11 +118,14 @@ class Customer(models.Model):
             res_partner = importer.create_customer(backend,mapper,res,status)
 
         if mapper and (res['status'] == 200 or res['status'] == 201):
+
             vals = {
                 'shopify_id' : res['data']['customer']['id'],
                 'backend_id' : backend.id,
                 'customer_id' : mapper.customer_id.id,
-                'shopify_address_id': res['data']['customer']['default_address']['id'],
+                'shopify_address_id':res['data']['customer']['default_address']['id'] if 'default_address' in res['data']['customer'] else '',
+                
+                
             }
             self.backend_mapping.write(vals)
         elif (res['status'] == 200 or res['status'] == 201):

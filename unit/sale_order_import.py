@@ -153,86 +153,93 @@ class ShopifySaleOrderImport(ShopifyImportExport):
         record = res['data']
 
         sale_order_id = mapper.order_id
-        sale_order_id.shopify_payment_status = record['orders'][0]['financial_status']
-        sale_order_id.shopify_sale_order_number = record['orders'][0]['name']
-        for i in record['orders'][0]['payment_gateway_names']:
-            sale_order_id.shopify_payment_method = str(i)
+        if record['orders']:
+            sale_order_id.shopify_payment_status = record['orders'][0]['financial_status']
+            sale_order_id.shopify_sale_order_number = record['orders'][0]['name']
+            for i in record['orders'][0]['payment_gateway_names']:
+                sale_order_id.shopify_payment_method = str(i)
 
-        if record['orders'][0]['financial_status'] == "pending":
-            status = 'draft'
-        elif record['orders'][0]['financial_status'] == "paid":
-            status = 'sale'
-        elif record['orders'][0]['financial_status'] == "voided":
-            status = 'cancel'
+            if record['orders'][0]['financial_status'] == "pending":
+                status = 'draft'
+            elif record['orders'][0]['financial_status'] == "paid":
+                status = 'sale'
+            elif record['orders'][0]['financial_status'] == "voided":
+                status = 'cancel'
+            else:
+                status = 'draft'
+
         else:
+            sale_order_id.shopify_payment_status = ''
+            sale_order_id.shopify_sale_order_number = ''
+            sale_order_id.shopify_payment_method = ''
             status = 'draft'
 
         sale_order_id.state = status
-
-        if 'line_items' in res['data']['orders'][0]:
-            product_ids = []
-            for lines in record['orders'][0]['line_items']:
-                if 'product_id' in lines:
-                    product_template_id = mapper.env['shopify.odoo.product.template'].search(
-                        [('backend_id', '=', backend.id),
-                         ('shopify_id', '=', lines['product_id'])])
-                    if product_template_id:
-                        pass
-                    else:
-                        if lines['product_id'] == False:
-                            break
+        if record['orders']:
+            if 'line_items' in res['data']['orders'][0]:
+                product_ids = []
+                for lines in record['orders'][0]['line_items']:
+                    if 'product_id' in lines:
+                        product_template_id = mapper.env['shopify.odoo.product.template'].search(
+                            [('backend_id', '=', backend.id),
+                            ('shopify_id', '=', lines['product_id'])])
+                        if product_template_id:
+                            pass
                         else:
-                            product = mapper.env['product.template']
-                            product.single_importer(backend, lines['product_id'], False)
-                            product_template_id = mapper.env['shopify.odoo.product.template'].search(
-                                [('backend_id', '=', backend.id), ('shopify_id', '=', lines['product_id'])])
+                            if lines['product_id'] == False:
+                                break
+                            else:
+                                product = mapper.env['product.template']
+                                product.single_importer(backend, lines['product_id'], False)
+                                product_template_id = mapper.env['shopify.odoo.product.template'].search(
+                                    [('backend_id', '=', backend.id), ('shopify_id', '=', lines['product_id'])])
 
-                    # product = product_template_id.product_id.product_variant_id
-                    product = []
-                    # for i in product_template_id.product_id.product_variant_ids:
+                        # product = product_template_id.product_id.product_variant_id
+                        product = []
+                        # for i in product_template_id.product_id.product_variant_ids:
 
-                    # sale_order_line was not taking proper product variants as the response have two separate id one
-                    # for product and other for variant so the below code.
+                        # sale_order_line was not taking proper product variants as the response have two separate id one
+                        # for product and other for variant so the below code.
 
-                    product_variant_id = mapper.env['shopify.odoo.product.product'].search(
-                        [('backend_id', '=', backend.id),
-                         ('shopify_id', '=', lines['variant_id'])])
-                    product = product_variant_id.product_id
+                        product_variant_id = mapper.env['shopify.odoo.product.product'].search(
+                            [('backend_id', '=', backend.id),
+                            ('shopify_id', '=', lines['variant_id'])])
+                        product = product_variant_id.product_id
 
-                    tax_ids = []
-                    if lines['tax_lines']:
-                        for tax in lines['tax_lines']:
-                            if tax['title']:
-                                tax_id = mapper.env['account.tax'].search([('name', '=', tax['title'])])
-                                if not tax_id:
-                                    tax_rate = tax['rate'] * 100
-                                    vals = {
-                                        'name': tax['title'],
-                                        'amount': float(tax_rate),
-                                        'amount_type': 'percent',
+                        tax_ids = []
+                        if lines['tax_lines']:
+                            for tax in lines['tax_lines']:
+                                if tax['title']:
+                                    tax_id = mapper.env['account.tax'].search([('name', '=', tax['title'])])
+                                    if not tax_id:
+                                        tax_rate = tax['rate'] * 100
+                                        vals = {
+                                            'name': tax['title'],
+                                            'amount': float(tax_rate),
+                                            'amount_type': 'percent',
+                                        }
+                                        tax_create_id = mapper.env['account.tax'].create(vals)
+                                        tax_ids.append(tax_create_id.id)
+                                    else:
+                                        tax_ids.append(tax_id.id)
+
+                        for prod in product:
+                            result = {'product_id': prod.id,
+                                    'price_unit': lines['price'],
+                                    'product_uom_qty': lines['quantity'],
+                                    'product_uom': 1,
+                                    'price_subtotal': record['orders'][0]['subtotal_price'],
+                                    'name': lines['name'].replace('\\/', ''),
+                                    'order_id': sale_order_id.id,
+                                    'backend': str(lines['id']),
+                                    'tax_id': [(6, 0, tax_ids)],
                                     }
-                                    tax_create_id = mapper.env['account.tax'].create(vals)
-                                    tax_ids.append(tax_create_id.id)
-                                else:
-                                    tax_ids.append(tax_id.id)
+                            product_ids.append(result)
 
-                    for prod in product:
-                        result = {'product_id': prod.id,
-                                  'price_unit': lines['price'],
-                                  'product_uom_qty': lines['quantity'],
-                                  'product_uom': 1,
-                                  'price_subtotal': record['orders'][0]['subtotal_price'],
-                                  'name': lines['name'].replace('\\/', ''),
-                                  'order_id': sale_order_id.id,
-                                  'backend': str(lines['id']),
-                                  'tax_id': [(6, 0, tax_ids)],
-                                  }
-                        product_ids.append(result)
-
-            for details in product_ids:
-                order = mapper.env['sale.order.line'].search(
-                    [('backend', '=', details['backend'])])
-                if order:
-                    order.write(details)
-                else:
-                    order.create(details)
+                for details in product_ids:
+                    order = mapper.env['sale.order.line'].search(
+                        [('backend', '=', details['backend'])])
+                    if order:
+                        order.write(details)
+                    else:
+                        order.create(details)

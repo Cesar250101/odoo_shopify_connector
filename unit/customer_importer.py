@@ -117,8 +117,6 @@ class ShopifyCustomerImport(ShopifyImportExport):
 			return res_partner
 
 	def write_customer(self,backend,mapper,res):
-
-
 		if 'default_address' in res['data']['customer']:
 			bill_country_id = mapper.env['res.partner'].country_id.search(
 				[('code', '=', res['data']['customer']['default_address']['country_code'])])
@@ -132,47 +130,46 @@ class ShopifyCustomerImport(ShopifyImportExport):
 
 
 		shopify_child_ids = []
-
-		if not mapper.search([('shopify_address_id','=',res['data']['customer']['default_address']['id'])]):
-
-			shipping_details = {
-				'type': 'delivery',
-				'name': res['data']['customer']['first_name'] + res['data']['customer']['last_name'] or '',
-				'first_name_1': res['data']['customer']['first_name'] or '',
-				'last_name_1': res['data']['customer']['last_name'] or '',
-				'street': res['data']['customer']['default_address']['address1'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'street2': res['data']['customer']['default_address']['address2'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'city': res['data']['customer']['default_address']['city'] if 'default_address' in res['data'][
-					'customer'] else '',
-				#'state_id': bill_state_id.id or None,
-				'state_id': bill_state_id or None,
-				'zip': res['data']['customer']['default_address']['zip'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'country_id': bill_country_id or None,
-			}
-			shopify_child_ids.append((0, 0, shipping_details))
-			billing_details = {
-				'type': 'invoice',
-				'name': res['data']['customer']['first_name'] + res['data']['customer']['last_name'] or '',
-				'first_name_1': res['data']['customer']['first_name'] or '',
-				'last_name_1': res['data']['customer']['last_name'] or '',
-				'street': res['data']['customer']['default_address']['address1'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'street2': res['data']['customer']['default_address']['address2'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'city': res['data']['customer']['default_address']['city'] if 'default_address' in res['data'][
-					'customer'] else '',
-				#'state_id': bill_state_id.id or None,
-				'state_id': bill_state_id or None,
-				'zip': res['data']['customer']['default_address']['zip'] if 'default_address' in res['data'][
-					'customer'] else '',
-				'country_id': bill_country_id or None,
-			}
-			shopify_child_ids.append((0, 0, billing_details))
-		else:
-			shopify_child_ids=[]
+		if 'default_address' in res['data']['customer']:
+			if not mapper.search([('shopify_address_id','=',res['data']['customer']['default_address']['id'])]):
+				shipping_details = {
+					'type': 'delivery',
+					'name': res['data']['customer']['first_name'] + res['data']['customer']['last_name'] or '',
+					'first_name_1': res['data']['customer']['first_name'] or '',
+					'last_name_1': res['data']['customer']['last_name'] or '',
+					'street': res['data']['customer']['default_address']['address1'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'street2': res['data']['customer']['default_address']['address2'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'city': res['data']['customer']['default_address']['city'] if 'default_address' in res['data'][
+						'customer'] else '',
+					#'state_id': bill_state_id.id or None,
+					'state_id': bill_state_id or None,
+					'zip': res['data']['customer']['default_address']['zip'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'country_id': bill_country_id or None,
+				}
+				shopify_child_ids.append((0, 0, shipping_details))
+				billing_details = {
+					'type': 'invoice',
+					'name': res['data']['customer']['first_name'] + res['data']['customer']['last_name'] or '',
+					'first_name_1': res['data']['customer']['first_name'] or '',
+					'last_name_1': res['data']['customer']['last_name'] or '',
+					'street': res['data']['customer']['default_address']['address1'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'street2': res['data']['customer']['default_address']['address2'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'city': res['data']['customer']['default_address']['city'] if 'default_address' in res['data'][
+						'customer'] else '',
+					#'state_id': bill_state_id.id or None,
+					'state_id': bill_state_id or None,
+					'zip': res['data']['customer']['default_address']['zip'] if 'default_address' in res['data'][
+						'customer'] else '',
+					'country_id': bill_country_id or None,
+				}
+				shopify_child_ids.append((0, 0, billing_details))
+			else:
+				shopify_child_ids=[]
 
 
 		vals={
