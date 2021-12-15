@@ -158,6 +158,10 @@ class ShopifyProductImport(ShopifyImportExport):
             else:
                 create_category = None
 
+            if create_category==None:
+                create_category=1
+
+
             vals = {
                 'name': result['title'],
                 'categ_id': create_category,
