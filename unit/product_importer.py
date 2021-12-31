@@ -421,7 +421,8 @@ class ShopifyProductImport(ShopifyImportExport):
                  'new_quantity': 0,
                  'location_id': warehouse.lot_stock_id.id,
                  'product_variant_count': i.product_variant_count})
-            update_stock_id.change_product_qty()
+
+            #update_stock_id.change_product_qty()
 
         #product_status
         if res['data']['product']['status'] == 'active':
@@ -444,7 +445,7 @@ class ShopifyProductImport(ShopifyImportExport):
             else:
                 create_category = mapper.env['product.category'].search(([('name','=',category_name)]),limit=1).id
         else:
-            create_category = None
+            create_category = 1
 
         vals = {
             'name': res['data']['product']['title'],
