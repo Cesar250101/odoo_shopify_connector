@@ -44,6 +44,15 @@
                 <xpath expr="//field[@name='taxes_id']" position="before">
                     <field name="compare_at_price"/>
                 </xpath>
+          <page name="shopify" string="Shopify">
+                <group name="shopify" string="Shopify">
+                  <field name="backend_mapping"/>
+                  <field name="backend_id"/>
+                  <field name="tag_ids"/>
+                  <field name="shopify_id"/>
+                  <field name="tag_ids"/>
+                </group>
+          </page>                
             </field>
         </record>
     </data>
