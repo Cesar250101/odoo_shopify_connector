@@ -47,11 +47,11 @@
                 <xpath expr="//page[@name='inventory']" position="after">
                     <page name="shopify" string="Shopify">
                         <group name="shopify" string="Shopify">
-                            <field name="backend_mapping" widget="one2many"/>
-                            <field name="backend_id" widget="one2many"/>
-                            <field name="tag_ids" widget="one2many"/>
+                            <field name="backend_mapping" widget="many2many_tags"/>
+                            <field name="backend_id" widget="many2many_tags"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                             <field name="shopify_id"/>
-                            <field name="tag_ids" widget="one2many"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </page>                
                 </xpath>
